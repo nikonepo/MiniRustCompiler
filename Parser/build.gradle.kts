@@ -10,6 +10,7 @@ repositories {
 
 dependencies {
     // https://mvnrepository.com/artifact/org.antlr/antlr4
+    implementation(project(":Lexer"))
     implementation("org.antlr:antlr4:4.13.2")
 
     testImplementation("org.junit.jupiter:junit-jupiter:5.7.1")
