@@ -1,6 +1,6 @@
-package mipt.compiler.minirust.parser;
+package mipt.compiler.minirust.lexer;
 
-import mipt.compiler.minirust.parser.Tokenizer.ParserPosition;
+import mipt.compiler.minirust.lexer.Tokenizer.ParserPosition;
 
 public final class Position {
 

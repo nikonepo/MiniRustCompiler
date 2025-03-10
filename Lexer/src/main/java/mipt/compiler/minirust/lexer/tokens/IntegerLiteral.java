@@ -1,3 +1,3 @@
-package mipt.compiler.minirust.parser.tokens;
+package mipt.compiler.minirust.lexer.tokens;
 
 public record IntegerLiteral(int value) implements TokenType {}

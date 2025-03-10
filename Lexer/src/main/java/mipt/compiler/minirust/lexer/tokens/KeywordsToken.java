@@ -1,4 +1,4 @@
-package mipt.compiler.minirust.parser.tokens;
+package mipt.compiler.minirust.lexer.tokens;
 
 public enum KeywordsToken implements TokenType {
 

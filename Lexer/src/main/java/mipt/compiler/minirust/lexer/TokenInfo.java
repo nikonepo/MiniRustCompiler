@@ -1,6 +1,6 @@
-package mipt.compiler.minirust.parser;
+package mipt.compiler.minirust.lexer;
 
-import mipt.compiler.minirust.parser.tokens.TokenType;
+import mipt.compiler.minirust.lexer.tokens.TokenType;
 
 public record TokenInfo(TokenType token, Position position) {
 

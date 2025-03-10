@@ -1,4 +1,4 @@
-package mipt.compiler.minirust.parser.tokens;
+package mipt.compiler.minirust.lexer.tokens;
 
 public enum DelimitersToken implements TokenType {
     LEFT_CURLY_BRACKET("{"),

@@ -1,13 +1,14 @@
-package mipt.compiler.minirust.parser;
+package mipt.compiler.minirust.lexer;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import mipt.compiler.minirust.parser.tokens.DelimitersToken;
-import mipt.compiler.minirust.parser.tokens.IdentifierToken;
-import mipt.compiler.minirust.parser.tokens.IntegerLiteral;
-import mipt.compiler.minirust.parser.tokens.KeywordsToken;
-import mipt.compiler.minirust.parser.tokens.PunctuationsToken;
+import mipt.compiler.minirust.lexer.TokenInfo;
+import mipt.compiler.minirust.lexer.tokens.DelimitersToken;
+import mipt.compiler.minirust.lexer.tokens.IdentifierToken;
+import mipt.compiler.minirust.lexer.tokens.IntegerLiteral;
+import mipt.compiler.minirust.lexer.tokens.KeywordsToken;
+import mipt.compiler.minirust.lexer.tokens.PunctuationsToken;
 
 public class Tokenizer {
 

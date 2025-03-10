@@ -1,14 +1,14 @@
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.List;
-import mipt.compiler.minirust.parser.Position;
-import mipt.compiler.minirust.parser.TokenInfo;
-import mipt.compiler.minirust.parser.Tokenizer;
-import mipt.compiler.minirust.parser.tokens.DelimitersToken;
-import mipt.compiler.minirust.parser.tokens.IdentifierToken;
-import mipt.compiler.minirust.parser.tokens.IntegerLiteral;
-import mipt.compiler.minirust.parser.tokens.KeywordsToken;
-import mipt.compiler.minirust.parser.tokens.PunctuationsToken;
+import mipt.compiler.minirust.lexer.Position;
+import mipt.compiler.minirust.lexer.TokenInfo;
+import mipt.compiler.minirust.lexer.Tokenizer;
+import mipt.compiler.minirust.lexer.tokens.DelimitersToken;
+import mipt.compiler.minirust.lexer.tokens.IdentifierToken;
+import mipt.compiler.minirust.lexer.tokens.IntegerLiteral;
+import mipt.compiler.minirust.lexer.tokens.KeywordsToken;
+import mipt.compiler.minirust.lexer.tokens.PunctuationsToken;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
