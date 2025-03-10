@@ -18,7 +18,9 @@ jobs:
           distribution: 'temurin'
           java-version: 21
       - name: Run tests
-        run: ./gradlew test
+        run: |
+          chmod +x gradlew
+          ./gradlew test
   build:
     runs-on: ubuntu-latest
 
@@ -34,7 +36,7 @@ jobs:
       - name: Run Coverage
         run: |
           chmod +x gradlew
-          ./gradlew testCoverage
+          ./gradlew jacocoTestReport
       - name: Add coverage to PR
         id: jacoco
         uses: madrapps/jacoco-report@v1.7.1
