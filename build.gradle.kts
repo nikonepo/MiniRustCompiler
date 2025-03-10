@@ -1,13 +1,14 @@
-plugins {
-    id("java")
-}
+subprojects {
+    apply(plugin = "java")
 
-group = "mipt.compiler.minirust"
-version = "1.0.0"
+    group = "mipt.compiler.minirust"
+    version = "1.0.0"
 
-repositories {
-    mavenCentral()
-}
+    repositories {
+        mavenCentral()
+    }
 
-dependencies {
+    tasks.withType<Test> {
+        useJUnitPlatform()
+    }
 }
