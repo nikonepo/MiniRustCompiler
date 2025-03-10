@@ -1,13 +1,19 @@
 plugins {
-    id("java")
+    jacoco
 }
 
-group = "mipt.compiler.minirust"
-version = "1.0.0"
+subprojects {
+    apply(plugin = "java")
+    apply(plugin = "jacoco")
 
-repositories {
-    mavenCentral()
-}
+    group = "mipt.compiler.minirust"
+    version = "1.0.0"
 
-dependencies {
+    repositories {
+        mavenCentral()
+    }
+
+    tasks.withType<Test> {
+        useJUnitPlatform()
+    }
 }

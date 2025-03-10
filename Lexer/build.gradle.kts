@@ -1,12 +1,10 @@
 plugins {
-    id("java")
+    jacoco
 }
 
-group = "mipt.compiler.minirust.lexer"
-version = "1.0.0"
-
-repositories {
-    mavenCentral()
+jacoco {
+    toolVersion = "0.8.12"
+    reportsDirectory = layout.buildDirectory.dir("customJacocoReportDir")
 }
 
 dependencies {
@@ -16,4 +14,15 @@ dependencies {
 
 tasks.test {
     useJUnitPlatform()
+    finalizedBy(tasks.jacocoTestReport)
+}
+
+tasks.jacocoTestReport {
+    dependsOn(tasks.test)
+
+    reports {
+        xml.required = false
+        csv.required = false
+        html.outputLocation = layout.buildDirectory.dir("jacocoHtml")
+    }
 }
