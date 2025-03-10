@@ -43,8 +43,7 @@ public class Tokenizer {
                 // Punctuations
 
                 case '+':
-                    tokens.add(new TokenInfo(
-                        PunctuationsToken.PLUS,
+                    tokens.add(new TokenInfo(PunctuationsToken.PLUS,
                         new Position(currentPosition)
                     ));
 
@@ -54,8 +53,7 @@ public class Tokenizer {
                     break;
 
                 case '-':
-                    tokens.add(new TokenInfo(
-                        PunctuationsToken.MINUS,
+                    tokens.add(new TokenInfo(PunctuationsToken.MINUS,
                         new Position(currentPosition)
                     ));
 
@@ -65,8 +63,7 @@ public class Tokenizer {
                     break;
 
                 case '*':
-                    tokens.add(new TokenInfo(
-                        PunctuationsToken.STAR,
+                    tokens.add(new TokenInfo(PunctuationsToken.STAR,
                         new Position(currentPosition)
                     ));
 
@@ -96,18 +93,9 @@ public class Tokenizer {
                     break;
 
                 case '=':
-                    tokens.add(new TokenInfo(PunctuationsToken.EQ, new Position(currentPosition)));
-
-                    ++currentPosition.column;
-                    ++currentPosition.position;
-
-                    break;
-
-                case '!':
-                    c = input.charAt(currentPosition.position);
-                    if (c == '=') {
-                        tokens.add(new TokenInfo(
-                            PunctuationsToken.NE,
+                    if (currentPosition.position + 1 < input.length() &&
+                        input.charAt(currentPosition.position + 1) == '=') {
+                        tokens.add(new TokenInfo(PunctuationsToken.EQEQ,
                             new Position(currentPosition)
                         ));
 
@@ -115,7 +103,27 @@ public class Tokenizer {
                         currentPosition.position += 2;
                     } else {
                         tokens.add(new TokenInfo(
-                            PunctuationsToken.NOT,
+                            PunctuationsToken.EQ,
+                            new Position(currentPosition)
+                        ));
+
+                        ++currentPosition.column;
+                        ++currentPosition.position;
+                    }
+
+                    break;
+
+                case '!':
+                    if (currentPosition.position + 1 < input.length() &&
+                        input.charAt(currentPosition.position + 1) == '=') {
+                        tokens.add(new TokenInfo(PunctuationsToken.NE,
+                            new Position(currentPosition)
+                        ));
+
+                        currentPosition.column += 2;
+                        currentPosition.position += 2;
+                    } else {
+                        tokens.add(new TokenInfo(PunctuationsToken.NOT,
                             new Position(currentPosition)
                         ));
 
@@ -154,7 +162,8 @@ public class Tokenizer {
     }
 
     private static TokenInfo parseNumber(
-        String input, ParserPosition current) {
+        String input, ParserPosition current
+    ) {
         var start = new ParserPosition(current);
 
         while (current.position < input.length() &&
@@ -164,9 +173,7 @@ public class Tokenizer {
         }
 
         var number = input.substring(start.position, current.position);
-        return new TokenInfo(new IntegerLiteral(Integer.parseInt(number)),
-            new Position(start)
-        );
+        return new TokenInfo(new IntegerLiteral(Integer.parseInt(number)), new Position(start));
     }
 
     private static TokenInfo parseIdentifier(
@@ -189,11 +196,13 @@ public class Tokenizer {
     }
 
     static class ParserPosition {
-        int column   = 0;
-        int line     = 0;
+
+        int column = 0;
+        int line = 0;
         int position = 0;
 
-        public ParserPosition() {}
+        public ParserPosition() {
+        }
 
         public ParserPosition(ParserPosition other) {
             this.column = other.column;
