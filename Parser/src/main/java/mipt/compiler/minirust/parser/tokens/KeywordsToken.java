@@ -6,7 +6,8 @@ public enum KeywordsToken implements TokenType {
     FALSE("false"),
     FN("fn"),
     IF("if"),
-    LET("let"),;
+    LET("let"),
+    TRUE("true");
 
     private final String word;
 

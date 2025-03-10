@@ -3,6 +3,7 @@ package mipt.compiler.minirust.parser;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import mipt.compiler.minirust.parser.tokens.DelimitersToken;
 import mipt.compiler.minirust.parser.tokens.IdentifierToken;
 import mipt.compiler.minirust.parser.tokens.IntegerLiteral;
 import mipt.compiler.minirust.parser.tokens.KeywordsToken;
@@ -40,6 +41,48 @@ public class Tokenizer {
             }
 
             switch (c) {
+                // Delimiters
+
+                case '{':
+                    tokens.add(new TokenInfo(DelimitersToken.LEFT_CURLY_BRACKET,
+                        new Position(currentPosition)
+                    ));
+
+                    ++currentPosition.column;
+                    ++currentPosition.position;
+
+                    break;
+
+                case '}':
+                    tokens.add(new TokenInfo(DelimitersToken.RIGHT_CURLY_BRACKET,
+                        new Position(currentPosition)
+                    ));
+
+                    ++currentPosition.column;
+                    ++currentPosition.position;
+
+                    break;
+
+                case '(':
+                    tokens.add(new TokenInfo(DelimitersToken.LEFT_PARENTHESES,
+                        new Position(currentPosition)
+                    ));
+
+                    ++currentPosition.column;
+                    ++currentPosition.position;
+
+                    break;
+
+                case ')':
+                    tokens.add(new TokenInfo(DelimitersToken.RIGHT_PARENTHESES,
+                        new Position(currentPosition)
+                    ));
+
+                    ++currentPosition.column;
+                    ++currentPosition.position;
+
+                    break;
+
                 // Punctuations
 
                 case '+':

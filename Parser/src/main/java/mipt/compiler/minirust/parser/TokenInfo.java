@@ -16,4 +16,14 @@ public record TokenInfo(TokenType token, Position position) {
 
         return token.equals(otherTokenInfo.token) && position.equals(otherTokenInfo.position);
     }
+
+    @Override
+    public String toString() {
+        return String.format(
+            "TokenType: %s, Position: { Line: %d, Column: %d }",
+            token.toString(),
+            position.line,
+            position.column
+        );
+    }
 }
