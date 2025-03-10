@@ -1,3 +1,23 @@
+import static mipt.compiler.minirust.lexer.Position.of;
+import static mipt.compiler.minirust.lexer.TokenInfo.EQ;
+import static mipt.compiler.minirust.lexer.TokenInfo.EQEQ;
+import static mipt.compiler.minirust.lexer.TokenInfo.FN;
+import static mipt.compiler.minirust.lexer.TokenInfo.IDENTIFIER;
+import static mipt.compiler.minirust.lexer.TokenInfo.INTEGER_LITERAL;
+import static mipt.compiler.minirust.lexer.TokenInfo.LEFT_CURLY_BRACKET;
+import static mipt.compiler.minirust.lexer.TokenInfo.LEFT_PARENTHESES;
+import static mipt.compiler.minirust.lexer.TokenInfo.LET;
+import static mipt.compiler.minirust.lexer.TokenInfo.MINUS;
+import static mipt.compiler.minirust.lexer.TokenInfo.NE;
+import static mipt.compiler.minirust.lexer.TokenInfo.NOT;
+import static mipt.compiler.minirust.lexer.TokenInfo.PERCENT;
+import static mipt.compiler.minirust.lexer.TokenInfo.PLUS;
+import static mipt.compiler.minirust.lexer.TokenInfo.RIGHT_CURLY_BRACKET;
+import static mipt.compiler.minirust.lexer.TokenInfo.RIGHT_PARENTHESES;
+import static mipt.compiler.minirust.lexer.TokenInfo.SEMI;
+import static mipt.compiler.minirust.lexer.TokenInfo.SLASH;
+import static mipt.compiler.minirust.lexer.TokenInfo.STAR;
+import static mipt.compiler.minirust.lexer.TokenInfo.TRUE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.List;
@@ -5,8 +25,6 @@ import mipt.compiler.minirust.lexer.Position;
 import mipt.compiler.minirust.lexer.TokenInfo;
 import mipt.compiler.minirust.lexer.Tokenizer;
 import mipt.compiler.minirust.lexer.tokens.DelimitersToken;
-import mipt.compiler.minirust.lexer.tokens.IdentifierToken;
-import mipt.compiler.minirust.lexer.tokens.IntegerLiteral;
 import mipt.compiler.minirust.lexer.tokens.KeywordsToken;
 import mipt.compiler.minirust.lexer.tokens.PunctuationsToken;
 import org.junit.jupiter.api.Test;
@@ -27,7 +45,9 @@ public class TokenizerTest {
     public void integerLiteralTest(int number) {
         var tokens = Tokenizer.tokenize("" + number);
 
-        assertEquals(List.of(new TokenInfo(new IntegerLiteral(number), new Position(0, 0))), tokens);
+        assertEquals(List.of(
+            INTEGER_LITERAL(of(0, 0), number)
+        ), tokens);
     }
 
     @Test
@@ -35,7 +55,9 @@ public class TokenizerTest {
         for (var keywordToken : KeywordsToken.values()) {
             var tokens = Tokenizer.tokenize(keywordToken.getWord());
 
-            assertEquals(List.of(new TokenInfo(keywordToken, new Position(0, 0))), tokens);
+            assertEquals(List.of(
+                new TokenInfo(keywordToken, new Position(0, 0), new Position(keywordToken.getWord().length(), 0))
+            ), tokens);
         }
     }
 
@@ -46,7 +68,13 @@ public class TokenizerTest {
         for (var punctuationToken : PunctuationsToken.values()) {
             var tokens = Tokenizer.tokenize(punctuationToken.getSymbol());
 
-            assertEquals(List.of(new TokenInfo(punctuationToken, new Position(0, 0))), tokens);
+            assertEquals(List.of(
+                new TokenInfo(
+                    punctuationToken,
+                    new Position(0, 0),
+                    new Position(punctuationToken.getSymbol().length(), 0)
+                )
+            ), tokens);
         }
     }
 
@@ -61,18 +89,21 @@ public class TokenizerTest {
             %
             """);
 
-        assertEquals(new TokenInfo(PunctuationsToken.EQ, new Position(0, 0)), tokens.get(0));
-        assertEquals(new TokenInfo(PunctuationsToken.EQ, new Position(2, 0)), tokens.get(1));
-        assertEquals(new TokenInfo(PunctuationsToken.EQEQ, new Position(4, 0)), tokens.get(2));
+        assertEquals(List.of(
+            EQ                      (of(0, 0)),
+            EQ                      (of(2, 0)),
+            EQEQ                    (of(4, 0)),
 
-        assertEquals(new TokenInfo(PunctuationsToken.NE, new Position(0, 1)), tokens.get(3));
-        assertEquals(new TokenInfo(PunctuationsToken.NOT, new Position(3, 1)), tokens.get(4));
+            NE                      (of(0, 1)),
+            NOT                     (of(3, 1)),
 
-        assertEquals(new TokenInfo(PunctuationsToken.PLUS, new Position(0, 2)), tokens.get(5));
-        assertEquals(new TokenInfo(PunctuationsToken.MINUS, new Position(2, 2)), tokens.get(6));
+            PLUS                    (of(0, 2)),
+            MINUS                   (of(2, 2)),
 
-        assertEquals(new TokenInfo(PunctuationsToken.SLASH, new Position(0, 3)), tokens.get(7));
-        assertEquals(new TokenInfo(PunctuationsToken.PERCENT, new Position(0, 4)), tokens.get(8));
+            SLASH                   (of(0, 3)),
+
+            PERCENT                 (of(0, 4))
+        ), tokens);
     }
 
     // === Delimiters Tokens ===
@@ -82,7 +113,13 @@ public class TokenizerTest {
         for (var delimiterToken : DelimitersToken.values()) {
             var tokens = Tokenizer.tokenize(delimiterToken.getSymbol());
 
-            assertEquals(List.of(new TokenInfo(delimiterToken, new Position(0, 0))), tokens);
+            assertEquals(List.of(
+                new TokenInfo(
+                    delimiterToken,
+                    new Position(0, 0),
+                    new Position(delimiterToken.getSymbol().length(), 0)
+                )
+            ), tokens);
         }
     }
 
@@ -94,11 +131,13 @@ public class TokenizerTest {
             ( )
             """);
 
-        assertEquals(new TokenInfo(DelimitersToken.LEFT_CURLY_BRACKET, new Position(0, 0)), tokens.get(0));
-        assertEquals(new TokenInfo(DelimitersToken.RIGHT_CURLY_BRACKET, new Position(2, 0)), tokens.get(1));
+        assertEquals(List.of(
+            LEFT_CURLY_BRACKET      (of(0, 0)),
+            RIGHT_CURLY_BRACKET     (of(2, 0)),
 
-        assertEquals(new TokenInfo(DelimitersToken.LEFT_PARENTHESES, new Position(0, 1)), tokens.get(2));
-        assertEquals(new TokenInfo(DelimitersToken.RIGHT_PARENTHESES, new Position(2, 1)), tokens.get(3));
+            LEFT_PARENTHESES        (of(0, 1)),
+            RIGHT_PARENTHESES       (of(2, 1))
+        ), tokens);
     }
 
     @Test
@@ -106,23 +145,23 @@ public class TokenizerTest {
         {
             var tokens = Tokenizer.tokenize("a = 1+2-3*4/5%6!=7");
 
-            assertEquals(new TokenInfo(new IdentifierToken("a"), new Position(0, 0)), tokens.get(0));
-            assertEquals(new TokenInfo(PunctuationsToken.EQ, new Position(2, 0)), tokens.get(1));
-            assertEquals(new TokenInfo(new IntegerLiteral(1), new Position(4, 0)), tokens.get(2));
-            assertEquals(new TokenInfo(PunctuationsToken.PLUS, new Position(5, 0)), tokens.get(3));
-            assertEquals(new TokenInfo(new IntegerLiteral(2), new Position(6, 0)), tokens.get(4));
-            assertEquals(new TokenInfo(PunctuationsToken.MINUS, new Position(7, 0)), tokens.get(5));
-            assertEquals(new TokenInfo(new IntegerLiteral(3), new Position(8, 0)), tokens.get(6));
-            assertEquals(new TokenInfo(PunctuationsToken.STAR, new Position(9, 0)), tokens.get(7));
-            assertEquals(new TokenInfo(new IntegerLiteral(4), new Position(10, 0)), tokens.get(8));
-            assertEquals(new TokenInfo(PunctuationsToken.SLASH, new Position(11, 0)),
-                tokens.get(9));
-            assertEquals(new TokenInfo(new IntegerLiteral(5), new Position(12, 0)), tokens.get(10));
-            assertEquals(new TokenInfo(PunctuationsToken.PERCENT, new Position(13, 0)),
-                tokens.get(11));
-            assertEquals(new TokenInfo(new IntegerLiteral(6), new Position(14, 0)), tokens.get(12));
-            assertEquals(new TokenInfo(PunctuationsToken.NE, new Position(15, 0)), tokens.get(13));
-            assertEquals(new TokenInfo(new IntegerLiteral(7), new Position(17, 0)), tokens.get(14));
+            assertEquals(List.of(
+                IDENTIFIER          (of(0, 0), "a"),
+                EQ                  (of(2, 0)),
+                INTEGER_LITERAL     (of(4, 0), 1),
+                PLUS                (of(5, 0)),
+                INTEGER_LITERAL     (of(6, 0), 2),
+                MINUS               (of(7, 0)),
+                INTEGER_LITERAL     (of(8, 0), 3),
+                STAR                (of(9, 0)),
+                INTEGER_LITERAL     (of(10, 0), 4),
+                SLASH               (of(11, 0)),
+                INTEGER_LITERAL     (of(12, 0), 5),
+                PERCENT             (of(13, 0)),
+                INTEGER_LITERAL     (of(14, 0), 6),
+                NE                  (of(15, 0)),
+                INTEGER_LITERAL     (of(17, 0), 7)
+            ), tokens);
         }
         {
             var tokens = Tokenizer.tokenize("""
@@ -137,64 +176,104 @@ public class TokenizerTest {
                 notEqual = (x != y)
                 """);
 
-            assertEquals(new TokenInfo(new IdentifierToken("x"), new Position(0, 0)), tokens.get(0));
-            assertEquals(new TokenInfo(PunctuationsToken.EQ, new Position(2, 0)), tokens.get(1));
-            assertEquals(new TokenInfo(new IntegerLiteral(10), new Position(4, 0)), tokens.get(2));
+            assertEquals(List.of(
+                IDENTIFIER          (of(0, 0), "x"),
+                EQ                  (of(2, 0)),
+                INTEGER_LITERAL     (of(4, 0), 10),
 
-            assertEquals(new TokenInfo(new IdentifierToken("x"), new Position(0, 1)), tokens.get(3));
-            assertEquals(new TokenInfo(PunctuationsToken.EQ, new Position(2, 1)), tokens.get(4));
-            assertEquals(new TokenInfo(new IdentifierToken("x"), new Position(4, 1)), tokens.get(5));
-            assertEquals(new TokenInfo(PunctuationsToken.PLUS, new Position(6, 1)), tokens.get(6));
-            assertEquals(new TokenInfo(new IntegerLiteral(1), new Position(8, 1)), tokens.get(7));
+                IDENTIFIER          (of(0, 1), "x"),
+                EQ                  (of(2, 1)),
+                IDENTIFIER          (of(4, 1), "x"),
+                PLUS                (of(6, 1)),
+                INTEGER_LITERAL     (of(8, 1), 1),
 
-            assertEquals(new TokenInfo(new IdentifierToken("x"), new Position(0, 2)), tokens.get(8));
-            assertEquals(new TokenInfo(PunctuationsToken.EQ, new Position(2, 2)), tokens.get(9));
-            assertEquals(new TokenInfo(new IdentifierToken("x"), new Position(4, 2)), tokens.get(10));
-            assertEquals(new TokenInfo(PunctuationsToken.MINUS, new Position(6, 2)), tokens.get(11));
-            assertEquals(new TokenInfo(new IntegerLiteral(2), new Position(8, 2)), tokens.get(12));
+                IDENTIFIER          (of(0, 2), "x"),
+                EQ                  (of(2, 2)),
+                IDENTIFIER          (of(4, 2), "x"),
+                MINUS               (of(6, 2)),
+                INTEGER_LITERAL     (of(8, 2), 2),
 
-            assertEquals(new TokenInfo(new IdentifierToken("y"), new Position(0, 3)), tokens.get(13));
-            assertEquals(new TokenInfo(PunctuationsToken.EQ, new Position(2, 3)), tokens.get(14));
-            assertEquals(new TokenInfo(new IdentifierToken("x"), new Position(4, 3)), tokens.get(15));
-            assertEquals(new TokenInfo(PunctuationsToken.STAR, new Position(6, 3)), tokens.get(16));
-            assertEquals(new TokenInfo(new IntegerLiteral(3), new Position(8, 3)), tokens.get(17));
+                IDENTIFIER          (of(0, 3), "y"),
+                EQ                  (of(2, 3)),
+                IDENTIFIER          (of(4, 3), "x"),
+                STAR                (of(6, 3)),
+                INTEGER_LITERAL     (of(8, 3), 3),
 
-            assertEquals(new TokenInfo(new IdentifierToken("z"), new Position(0, 4)), tokens.get(18));
-            assertEquals(new TokenInfo(PunctuationsToken.EQ, new Position(2, 4)), tokens.get(19));
-            assertEquals(new TokenInfo(new IdentifierToken("y"), new Position(4, 4)), tokens.get(20));
-            assertEquals(new TokenInfo(PunctuationsToken.SLASH, new Position(6, 4)), tokens.get(21));
-            assertEquals(new TokenInfo(new IntegerLiteral(4), new Position(8, 4)), tokens.get(22));
+                IDENTIFIER          (of(0, 4), "z"),
+                EQ                  (of(2, 4)),
+                IDENTIFIER          (of(4, 4), "y"),
+                SLASH               (of(6, 4)),
+                INTEGER_LITERAL     (of(8, 4), 4),
 
-            assertEquals(new TokenInfo(new IdentifierToken("modVal"), new Position(0, 5)), tokens.get(23));
-            assertEquals(new TokenInfo(PunctuationsToken.EQ, new Position(7, 5)), tokens.get(24));
-            assertEquals(new TokenInfo(new IdentifierToken("z"), new Position(9, 5)), tokens.get(25));
-            assertEquals(new TokenInfo(PunctuationsToken.PERCENT, new Position(11, 5)), tokens.get(26));
-            assertEquals(new TokenInfo(new IntegerLiteral(5), new Position(13, 5)), tokens.get(27));
+                IDENTIFIER          (of(0, 5), "modVal"),
+                EQ                  (of(7, 5)),
+                IDENTIFIER          (of(9, 5), "z"),
+                PERCENT             (of(11, 5)),
+                INTEGER_LITERAL     (of(13, 5), 5),
 
-            assertEquals(new TokenInfo(new IdentifierToken("flag"), new Position(0, 6)), tokens.get(28));
-            assertEquals(new TokenInfo(PunctuationsToken.EQ, new Position(5, 6)), tokens.get(29));
-            assertEquals(new TokenInfo(PunctuationsToken.NOT, new Position(7, 6)), tokens.get(30));
-            assertEquals(new TokenInfo(KeywordsToken.TRUE, new Position(8, 6)), tokens.get(31));
+                IDENTIFIER          (of(0, 6), "flag"),
+                EQ                  (of(5, 6)),
+                NOT                 (of(7, 6)),
+                TRUE                (of(8, 6)),
 
-            assertEquals(new TokenInfo(new IdentifierToken("isEqual"), new Position(0, 7)), tokens.get(32));
-            assertEquals(new TokenInfo(PunctuationsToken.EQ, new Position(8, 7)), tokens.get(33));
-            assertEquals(new TokenInfo(DelimitersToken.LEFT_PARENTHESES, new Position(10, 7)), tokens.get(34));
-            assertEquals(new TokenInfo(new IdentifierToken("x"), new Position(11, 7)), tokens.get(35));
-            assertEquals(new TokenInfo(PunctuationsToken.EQEQ, new Position(13, 7)),
-                tokens.get(36));
-            assertEquals(new TokenInfo(new IdentifierToken("y"), new Position(16, 7)), tokens.get(37));
-            assertEquals(new TokenInfo(DelimitersToken.RIGHT_PARENTHESES, new Position(17, 7)),
-                tokens.get(38));
+                IDENTIFIER          (of(0, 7), "isEqual"),
+                EQ                  (of(8, 7)),
+                LEFT_PARENTHESES    (of(10, 7)),
+                IDENTIFIER          (of(11, 7), "x"),
+                EQEQ                (of(13, 7)),
+                IDENTIFIER          (of(16, 7), "y"),
+                RIGHT_PARENTHESES   (of(17, 7)),
 
-            assertEquals(new TokenInfo(new IdentifierToken("notEqual"), new Position(0, 8)), tokens.get(39));
-            assertEquals(new TokenInfo(PunctuationsToken.EQ, new Position(9, 8)), tokens.get(40));
-            assertEquals(new TokenInfo(DelimitersToken.LEFT_PARENTHESES, new Position(11, 8)),
-                tokens.get(41));
-            assertEquals(new TokenInfo(new IdentifierToken("x"), new Position(12, 8)), tokens.get(42));
-            assertEquals(new TokenInfo(PunctuationsToken.NE, new Position(14, 8)), tokens.get(43));
-            assertEquals(new TokenInfo(new IdentifierToken("y"), new Position(17, 8)), tokens.get(44));
-            assertEquals(new TokenInfo(DelimitersToken.RIGHT_PARENTHESES, new Position(18, 8)),
-                tokens.get(45));
+                IDENTIFIER          (of(0, 8), "notEqual"),
+                EQ                  (of(9, 8)),
+                LEFT_PARENTHESES    (of(11, 8)),
+                IDENTIFIER          (of(12, 8), "x"),
+                NE                  (of(14, 8)),
+                IDENTIFIER          (of(17, 8), "y"),
+                RIGHT_PARENTHESES   (of(18, 8))
+                ), tokens
+            );
         }
+    }
+
+    @Test
+    public void simpleProgram() {
+        var tokens = Tokenizer.tokenize("""
+            fn main() {
+                let x = 10;
+                let y = 20;
+                let z = x + y;
+            }
+            """);
+
+        assertEquals(List.of(
+            FN                      (of(0, 0)),
+            IDENTIFIER              (of(3, 0), "main"),
+            LEFT_PARENTHESES        (of(7, 0)),
+            RIGHT_PARENTHESES       (of(8, 0)),
+            LEFT_CURLY_BRACKET      (of(10, 0)),
+
+            LET                     (of(4, 1)),
+            IDENTIFIER              (of(8, 1), "x"),
+            EQ                      (of(10, 1)),
+            INTEGER_LITERAL         (of(12, 1), 10),
+            SEMI                    (of(14, 1)),
+
+            LET                     (of(4, 2)),
+            IDENTIFIER              (of(8, 2), "y"),
+            EQ                      (of(10, 2)),
+            INTEGER_LITERAL         (of(12, 2), 20),
+            SEMI                    (of(14, 2)),
+
+            LET                     (of(4, 3)),
+            IDENTIFIER              (of(8, 3), "z"),
+            EQ                      (of(10, 3)),
+            IDENTIFIER              (of(12, 3), "x"),
+            PLUS                    (of(14, 3)),
+            IDENTIFIER              (of(16, 3), "y"),
+            SEMI                    (of(17, 3)),
+
+            RIGHT_CURLY_BRACKET     (of(0, 4))
+        ), tokens);
     }
 }

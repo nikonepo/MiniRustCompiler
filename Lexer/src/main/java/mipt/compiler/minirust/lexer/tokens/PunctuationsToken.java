@@ -10,7 +10,8 @@ public enum PunctuationsToken implements TokenType {
     NOT("!"),
     EQ("="),
     EQEQ("=="),
-    NE("!="),;
+    NE("!="),
+    SEMI(";");
 
     private final String symbol;
 

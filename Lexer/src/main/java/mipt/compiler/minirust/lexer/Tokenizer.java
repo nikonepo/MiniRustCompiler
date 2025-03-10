@@ -1,14 +1,25 @@
 package mipt.compiler.minirust.lexer;
 
+import static mipt.compiler.minirust.lexer.TokenInfo.EQ;
+import static mipt.compiler.minirust.lexer.TokenInfo.EQEQ;
+import static mipt.compiler.minirust.lexer.TokenInfo.IDENTIFIER;
+import static mipt.compiler.minirust.lexer.TokenInfo.INTEGER_LITERAL;
+import static mipt.compiler.minirust.lexer.TokenInfo.LEFT_CURLY_BRACKET;
+import static mipt.compiler.minirust.lexer.TokenInfo.LEFT_PARENTHESES;
+import static mipt.compiler.minirust.lexer.TokenInfo.MINUS;
+import static mipt.compiler.minirust.lexer.TokenInfo.NE;
+import static mipt.compiler.minirust.lexer.TokenInfo.NOT;
+import static mipt.compiler.minirust.lexer.TokenInfo.PERCENT;
+import static mipt.compiler.minirust.lexer.TokenInfo.PLUS;
+import static mipt.compiler.minirust.lexer.TokenInfo.RIGHT_CURLY_BRACKET;
+import static mipt.compiler.minirust.lexer.TokenInfo.RIGHT_PARENTHESES;
+import static mipt.compiler.minirust.lexer.TokenInfo.SEMI;
+import static mipt.compiler.minirust.lexer.TokenInfo.SLASH;
+import static mipt.compiler.minirust.lexer.TokenInfo.STAR;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-import mipt.compiler.minirust.lexer.TokenInfo;
-import mipt.compiler.minirust.lexer.tokens.DelimitersToken;
-import mipt.compiler.minirust.lexer.tokens.IdentifierToken;
-import mipt.compiler.minirust.lexer.tokens.IntegerLiteral;
 import mipt.compiler.minirust.lexer.tokens.KeywordsToken;
-import mipt.compiler.minirust.lexer.tokens.PunctuationsToken;
 
 public class Tokenizer {
 
@@ -45,9 +56,7 @@ public class Tokenizer {
                 // Delimiters
 
                 case '{':
-                    tokens.add(new TokenInfo(DelimitersToken.LEFT_CURLY_BRACKET,
-                        new Position(currentPosition)
-                    ));
+                    tokens.add(LEFT_CURLY_BRACKET(new Position(currentPosition)));
 
                     ++currentPosition.column;
                     ++currentPosition.position;
@@ -55,9 +64,7 @@ public class Tokenizer {
                     break;
 
                 case '}':
-                    tokens.add(new TokenInfo(DelimitersToken.RIGHT_CURLY_BRACKET,
-                        new Position(currentPosition)
-                    ));
+                    tokens.add(RIGHT_CURLY_BRACKET(new Position(currentPosition)));
 
                     ++currentPosition.column;
                     ++currentPosition.position;
@@ -65,9 +72,7 @@ public class Tokenizer {
                     break;
 
                 case '(':
-                    tokens.add(new TokenInfo(DelimitersToken.LEFT_PARENTHESES,
-                        new Position(currentPosition)
-                    ));
+                    tokens.add(LEFT_PARENTHESES(new Position(currentPosition)));
 
                     ++currentPosition.column;
                     ++currentPosition.position;
@@ -75,9 +80,7 @@ public class Tokenizer {
                     break;
 
                 case ')':
-                    tokens.add(new TokenInfo(DelimitersToken.RIGHT_PARENTHESES,
-                        new Position(currentPosition)
-                    ));
+                    tokens.add(RIGHT_PARENTHESES(new Position(currentPosition)));
 
                     ++currentPosition.column;
                     ++currentPosition.position;
@@ -87,9 +90,7 @@ public class Tokenizer {
                 // Punctuations
 
                 case '+':
-                    tokens.add(new TokenInfo(PunctuationsToken.PLUS,
-                        new Position(currentPosition)
-                    ));
+                    tokens.add(PLUS(new Position(currentPosition)));
 
                     ++currentPosition.column;
                     ++currentPosition.position;
@@ -97,9 +98,7 @@ public class Tokenizer {
                     break;
 
                 case '-':
-                    tokens.add(new TokenInfo(PunctuationsToken.MINUS,
-                        new Position(currentPosition)
-                    ));
+                    tokens.add(MINUS(new Position(currentPosition)));
 
                     ++currentPosition.column;
                     ++currentPosition.position;
@@ -107,9 +106,7 @@ public class Tokenizer {
                     break;
 
                 case '*':
-                    tokens.add(new TokenInfo(PunctuationsToken.STAR,
-                        new Position(currentPosition)
-                    ));
+                    tokens.add(STAR(new Position(currentPosition)));
 
                     ++currentPosition.column;
                     ++currentPosition.position;
@@ -117,9 +114,7 @@ public class Tokenizer {
                     break;
 
                 case '/':
-                    tokens.add(new TokenInfo(PunctuationsToken.SLASH,
-                        new Position(currentPosition)
-                    ));
+                    tokens.add(SLASH(new Position(currentPosition)));
 
                     ++currentPosition.column;
                     ++currentPosition.position;
@@ -127,9 +122,7 @@ public class Tokenizer {
                     break;
 
                 case '%':
-                    tokens.add(new TokenInfo(PunctuationsToken.PERCENT,
-                        new Position(currentPosition)
-                    ));
+                    tokens.add(PERCENT(new Position(currentPosition)));
 
                     ++currentPosition.column;
                     ++currentPosition.position;
@@ -139,17 +132,12 @@ public class Tokenizer {
                 case '=':
                     if (currentPosition.position + 1 < input.length() &&
                         input.charAt(currentPosition.position + 1) == '=') {
-                        tokens.add(new TokenInfo(PunctuationsToken.EQEQ,
-                            new Position(currentPosition)
-                        ));
+                        tokens.add(EQEQ(new Position(currentPosition)));
 
                         currentPosition.column += 2;
                         currentPosition.position += 2;
                     } else {
-                        tokens.add(new TokenInfo(
-                            PunctuationsToken.EQ,
-                            new Position(currentPosition)
-                        ));
+                        tokens.add(EQ(new Position(currentPosition)));
 
                         ++currentPosition.column;
                         ++currentPosition.position;
@@ -160,20 +148,24 @@ public class Tokenizer {
                 case '!':
                     if (currentPosition.position + 1 < input.length() &&
                         input.charAt(currentPosition.position + 1) == '=') {
-                        tokens.add(new TokenInfo(PunctuationsToken.NE,
-                            new Position(currentPosition)
-                        ));
+                        tokens.add(NE(new Position(currentPosition)));
 
                         currentPosition.column += 2;
                         currentPosition.position += 2;
                     } else {
-                        tokens.add(new TokenInfo(PunctuationsToken.NOT,
-                            new Position(currentPosition)
-                        ));
+                        tokens.add(NOT(new Position(currentPosition)));
 
                         ++currentPosition.column;
                         ++currentPosition.position;
                     }
+
+                    break;
+
+                case ';':
+                    tokens.add(SEMI(new Position(currentPosition)));
+
+                    ++currentPosition.column;
+                    ++currentPosition.position;
 
                     break;
             }
@@ -217,7 +209,8 @@ public class Tokenizer {
         }
 
         var number = input.substring(start.position, current.position);
-        return new TokenInfo(new IntegerLiteral(Integer.parseInt(number)), new Position(start));
+
+        return INTEGER_LITERAL(new Position(start), Integer.parseInt(number));
     }
 
     private static TokenInfo parseIdentifier(
@@ -234,9 +227,10 @@ public class Tokenizer {
         var identifier = input.substring(start.position, current.position);
 
         var keywordToken = KeywordsToken.fromString(identifier);
-        return new TokenInfo(Objects.requireNonNullElseGet(keywordToken,
-            () -> new IdentifierToken(identifier)
-        ), new Position(start));
+
+        return keywordToken == null ?
+            IDENTIFIER(new Position(start), identifier) :
+            new TokenInfo(keywordToken, new Position(start), new Position(current));
     }
 
     static class ParserPosition {

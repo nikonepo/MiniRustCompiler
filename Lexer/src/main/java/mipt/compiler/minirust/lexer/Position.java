@@ -29,4 +29,8 @@ public final class Position {
 
         return column == otherPosition.column && line == otherPosition.line;
     }
+
+    public static Position of(int column, int line) {
+        return new Position(column, line);
+    }
 }
