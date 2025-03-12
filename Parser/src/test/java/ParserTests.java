@@ -1,27 +1,24 @@
-import mipt.compiler.minirust.lexer.TokenInfo;
-import mipt.compiler.minirust.lexer.Tokenizer;
-import mipt.compiler.minirust.parser.rules.MiniRustParser;
+import mipt.compiler.minirust.parser.internal.MiniRustLexer;
+import mipt.compiler.minirust.parser.internal.MiniRustParser;
+import org.antlr.v4.runtime.CharStream;
+import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
-import org.antlr.v4.runtime.ListTokenSource;
 import org.antlr.v4.runtime.tree.ParseTree;
-
-import java.util.List;
+import org.junit.jupiter.api.Test;
 
 public class ParserTests {
-    String inputText = "your text here";
+    @Test
+    public void test1() {
+        String inputText = "fn main() {let kek int = 100; print(kek);}";
+        CharStream charStream = CharStreams.fromString(inputText);
 
-    // Instantiate your lexer (Replace 'YourGrammarName' with your grammar's name)
-    List<TokenInfo> tokens = Tokenizer.tokenize(inputText);
+        MiniRustLexer lexer = new MiniRustLexer(charStream);
+        CommonTokenStream tokens = new CommonTokenStream(lexer);
 
-    // Create a token stream from the lexer
-    CommonTokenStream tokens = new CommonTokenStream(new ListTokenSource(tokens));
+        MiniRustParser parser = new MiniRustParser(tokens);
 
-    // Instantiate your parser
-    MiniRustParser parser = new MiniRustParser(tokens);
+        ParseTree tree = parser.program();
 
-    // Start parsing using a defined start rule (replace 'startRule' with your entry point)
-    ParseTree tree = parser.expr();
-
-    // Print the parsed tree
-        System.out.println(tree.toStringTree(parser));
+        System.out.println("Parse tree: " + tree.toStringTree(parser));
+    }
 }

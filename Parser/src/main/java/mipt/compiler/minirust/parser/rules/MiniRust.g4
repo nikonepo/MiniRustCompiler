@@ -1,21 +1,28 @@
 grammar MiniRust;
 
-// The starting rule for parsing expressions
-expr
-    : expr ('+' | '-') term   # AddSub
-    | term                    # SingleTerm
-    ;
+import Expressions;
 
-term
-    : term ('*' | '/') factor # MulDiv
-    | factor                  # SingleFactor
-    ;
+program         : 'fn' 'main()' '{' statement* '}' EOF;
 
-factor
-    : NUMBER                  # Number
-    | '(' expr ')'            # Parentheses
-    ;
+statement       : letStatement
+                | assignment
+                | ifStatement
+                | printStatement
+                ;
 
-// Lexer rules (tokens). ANTLR automatically recognizes these as token types.
-NUMBER: [0-9]+ ('.' [0-9]+)?; // Matches integers and decimals
-WS: [ \t\r\n]+ -> skip;       // Skip whitespace
+statementIf     : assignment
+                | ifStatement
+                | printStatement
+                ;
+
+letStatement :
+   'let' identifierExpression TYPE ('=' expression ';') ? ;
+
+assignment :
+    identifierExpression '=' expression ';' ;
+
+ifStatement     : 'if' '(' comparisonExpression ')' '{' statementIf* '}';
+
+printStatement  : 'print' '(' (identifierExpression | literalExpression) ')' ';' ;
+
+WS: [ \t\r\n]+ -> skip;
