@@ -1,0 +1,3 @@
+grammar Types;
+
+TYPE: 'int' ;

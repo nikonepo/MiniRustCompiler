@@ -1,0 +1,4 @@
+fn main() {
+    let var1 int = 100;
+    let var1 int = 200;
+}
