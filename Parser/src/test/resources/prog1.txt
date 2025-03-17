@@ -1,0 +1,25 @@
+fn main() {
+    let var1 int = 100;
+    let var2 int = 200;
+    let var3 int = (var1 + var2) * 2 + 3 * var1;
+
+    if (var3 == 900) {
+        print(111);
+        print(111 + 333);
+    }
+
+    var2 = 500;
+    var1 = 600;
+
+    if (var1 > var2) {
+        print(777);
+    }
+
+    if (var1 == 600) {
+        print(888);
+    }
+
+    if (var2 < 100) {
+        print(999);
+    }
+}
