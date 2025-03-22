@@ -19,7 +19,7 @@ import static mipt.compiler.minirust.lexer.TokenInfo.STAR;
 
 import java.util.ArrayList;
 import java.util.List;
-import mipt.compiler.minirust.lexer.tokens.KeywordsToken;
+import mipt.compiler.minirust.lexer.tokens.keywords.KeywordType;
 
 public class Tokenizer {
 
@@ -226,11 +226,11 @@ public class Tokenizer {
 
         var identifier = input.substring(start.position, current.position);
 
-        var keywordToken = KeywordsToken.fromString(identifier);
+        var keywordType = KeywordType.fromString(identifier);
 
-        return keywordToken == null ?
+        return keywordType == null ?
             IDENTIFIER(new Position(start), identifier) :
-            new TokenInfo(keywordToken, new Position(start), new Position(current));
+            new TokenInfo(keywordType.createToken(), new Position(start), new Position(current));
     }
 
     static class ParserPosition {

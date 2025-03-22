@@ -1,8 +1,11 @@
 import static mipt.compiler.minirust.lexer.Position.of;
+import static mipt.compiler.minirust.lexer.TokenInfo.ELSE;
 import static mipt.compiler.minirust.lexer.TokenInfo.EQ;
 import static mipt.compiler.minirust.lexer.TokenInfo.EQEQ;
+import static mipt.compiler.minirust.lexer.TokenInfo.FALSE;
 import static mipt.compiler.minirust.lexer.TokenInfo.FN;
 import static mipt.compiler.minirust.lexer.TokenInfo.IDENTIFIER;
+import static mipt.compiler.minirust.lexer.TokenInfo.IF;
 import static mipt.compiler.minirust.lexer.TokenInfo.INTEGER_LITERAL;
 import static mipt.compiler.minirust.lexer.TokenInfo.LEFT_CURLY_BRACKET;
 import static mipt.compiler.minirust.lexer.TokenInfo.LEFT_PARENTHESES;
@@ -21,12 +24,7 @@ import static mipt.compiler.minirust.lexer.TokenInfo.TRUE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.List;
-import mipt.compiler.minirust.lexer.Position;
-import mipt.compiler.minirust.lexer.TokenInfo;
 import mipt.compiler.minirust.lexer.Tokenizer;
-import mipt.compiler.minirust.lexer.tokens.DelimitersToken;
-import mipt.compiler.minirust.lexer.tokens.KeywordsToken;
-import mipt.compiler.minirust.lexer.tokens.PunctuationsToken;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -52,12 +50,35 @@ public class TokenizerTest {
 
     @Test
     public void keywordTest() {
-        for (var keywordToken : KeywordsToken.values()) {
-            var tokens = Tokenizer.tokenize(keywordToken.getWord());
 
-            assertEquals(List.of(
-                new TokenInfo(keywordToken, new Position(0, 0), new Position(keywordToken.getWord().length(), 0))
-            ), tokens);
+        {
+            var token = Tokenizer.tokenize("else");
+            assertEquals(List.of(ELSE(of(0, 0))), token);
+        }
+
+        {
+            var token = Tokenizer.tokenize("false");
+            assertEquals(List.of(FALSE(of(0, 0))), token);
+        }
+
+        {
+            var token = Tokenizer.tokenize("fn");
+            assertEquals(List.of(FN(of(0, 0))), token);
+        }
+
+        {
+            var token = Tokenizer.tokenize("if");
+            assertEquals(List.of(IF(of(0, 0))), token);
+        }
+
+        {
+            var token = Tokenizer.tokenize("let");
+            assertEquals(List.of(LET(of(0, 0))), token);
+        }
+
+        {
+            var token = Tokenizer.tokenize("true");
+            assertEquals(List.of(TRUE(of(0, 0))), token);
         }
     }
 
@@ -65,16 +86,49 @@ public class TokenizerTest {
 
     @Test
     public void simplePunctuationsTest() {
-        for (var punctuationToken : PunctuationsToken.values()) {
-            var tokens = Tokenizer.tokenize(punctuationToken.getSymbol());
+        {
+            var tokens = Tokenizer.tokenize("==");
+            assertEquals(List.of(EQEQ(of(0, 0))), tokens);
+        }
 
-            assertEquals(List.of(
-                new TokenInfo(
-                    punctuationToken,
-                    new Position(0, 0),
-                    new Position(punctuationToken.getSymbol().length(), 0)
-                )
-            ), tokens);
+        {
+            var tokens = Tokenizer.tokenize("-");
+            assertEquals(List.of(MINUS(of(0, 0))), tokens);
+        }
+
+        {
+            var tokens = Tokenizer.tokenize("!=");
+            assertEquals(List.of(NE(of(0, 0))), tokens);
+        }
+
+        {
+            var tokens = Tokenizer.tokenize("!");
+            assertEquals(List.of(NOT(of(0, 0))), tokens);
+        }
+
+        {
+            var tokens = Tokenizer.tokenize("%");
+            assertEquals(List.of(PERCENT(of(0, 0))), tokens);
+        }
+
+        {
+            var tokens = Tokenizer.tokenize("+");
+            assertEquals(List.of(PLUS(of(0, 0))), tokens);
+        }
+
+        {
+            var tokens = Tokenizer.tokenize(";");
+            assertEquals(List.of(SEMI(of(0, 0))), tokens);
+        }
+
+        {
+            var tokens = Tokenizer.tokenize("/");
+            assertEquals(List.of(SLASH(of(0, 0))), tokens);
+        }
+
+        {
+            var tokens = Tokenizer.tokenize("*");
+            assertEquals(List.of(STAR(of(0, 0))), tokens);
         }
     }
 
@@ -110,16 +164,24 @@ public class TokenizerTest {
 
     @Test
     public void simpleDelimitersTest() {
-        for (var delimiterToken : DelimitersToken.values()) {
-            var tokens = Tokenizer.tokenize(delimiterToken.getSymbol());
+        {
+            var tokens = Tokenizer.tokenize("{");
+            assertEquals(List.of(LEFT_CURLY_BRACKET(of(0, 0))), tokens);
+        }
 
-            assertEquals(List.of(
-                new TokenInfo(
-                    delimiterToken,
-                    new Position(0, 0),
-                    new Position(delimiterToken.getSymbol().length(), 0)
-                )
-            ), tokens);
+        {
+            var tokens = Tokenizer.tokenize("}");
+            assertEquals(List.of(RIGHT_CURLY_BRACKET(of(0, 0))), tokens);
+        }
+
+        {
+            var tokens = Tokenizer.tokenize("(");
+            assertEquals(List.of(LEFT_PARENTHESES(of(0, 0))), tokens);
+        }
+
+        {
+            var tokens = Tokenizer.tokenize(")");
+            assertEquals(List.of(RIGHT_PARENTHESES(of(0, 0))), tokens);
         }
     }
 

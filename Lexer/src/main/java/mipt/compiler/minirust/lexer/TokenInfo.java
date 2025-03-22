@@ -1,11 +1,28 @@
 package mipt.compiler.minirust.lexer;
 
-import mipt.compiler.minirust.lexer.tokens.DelimitersToken;
 import mipt.compiler.minirust.lexer.tokens.IdentifierToken;
 import mipt.compiler.minirust.lexer.tokens.IntegerLiteral;
-import mipt.compiler.minirust.lexer.tokens.KeywordsToken;
-import mipt.compiler.minirust.lexer.tokens.PunctuationsToken;
 import mipt.compiler.minirust.lexer.tokens.TokenType;
+import mipt.compiler.minirust.lexer.tokens.delimiters.LeftCurlyBracketDelimiter;
+import mipt.compiler.minirust.lexer.tokens.delimiters.LeftParentheses;
+import mipt.compiler.minirust.lexer.tokens.delimiters.RightCurlyBracket;
+import mipt.compiler.minirust.lexer.tokens.delimiters.RightParentheses;
+import mipt.compiler.minirust.lexer.tokens.keywords.ElseKeyword;
+import mipt.compiler.minirust.lexer.tokens.keywords.FalseKeyword;
+import mipt.compiler.minirust.lexer.tokens.keywords.FnKeyword;
+import mipt.compiler.minirust.lexer.tokens.keywords.IfKeyword;
+import mipt.compiler.minirust.lexer.tokens.keywords.LetKeyword;
+import mipt.compiler.minirust.lexer.tokens.keywords.TrueKeyword;
+import mipt.compiler.minirust.lexer.tokens.punctuations.EqEqPunctuation;
+import mipt.compiler.minirust.lexer.tokens.punctuations.EqPunctuation;
+import mipt.compiler.minirust.lexer.tokens.punctuations.MinusPunctuation;
+import mipt.compiler.minirust.lexer.tokens.punctuations.NePunctuation;
+import mipt.compiler.minirust.lexer.tokens.punctuations.NotPunctuation;
+import mipt.compiler.minirust.lexer.tokens.punctuations.PercentPunctuation;
+import mipt.compiler.minirust.lexer.tokens.punctuations.PlusPunctuation;
+import mipt.compiler.minirust.lexer.tokens.punctuations.SemiPunctuation;
+import mipt.compiler.minirust.lexer.tokens.punctuations.SlashPunctuation;
+import mipt.compiler.minirust.lexer.tokens.punctuations.StarPunctuation;
 
 public record TokenInfo(TokenType token, Position start, Position end) {
 
@@ -19,8 +36,8 @@ public record TokenInfo(TokenType token, Position start, Position end) {
             return false;
         }
 
-        return token.equals(otherTokenInfo.token) && start.equals(otherTokenInfo.start) &&
-            end.equals(otherTokenInfo.end);
+        return token.getClass().equals(otherTokenInfo.token.getClass()) &&
+            start.equals(otherTokenInfo.start) && end.equals(otherTokenInfo.end);
     }
 
     @Override
@@ -36,8 +53,7 @@ public record TokenInfo(TokenType token, Position start, Position end) {
     // === Literal Tokens === //
 
     public static TokenInfo INTEGER_LITERAL(Position position, int value) {
-        return new TokenInfo(
-            new IntegerLiteral(value),
+        return new TokenInfo(new IntegerLiteral(value),
             position,
             Position.of(position.column + String.valueOf(value).length(), position.line)
         );
@@ -46,8 +62,7 @@ public record TokenInfo(TokenType token, Position start, Position end) {
     // === Identifier Tokens === //
 
     public static TokenInfo IDENTIFIER(Position position, String key) {
-        return new TokenInfo(
-            new IdentifierToken(key),
+        return new TokenInfo(new IdentifierToken(key),
             position,
             Position.of(position.column + key.length(), position.line)
         );
@@ -56,32 +71,28 @@ public record TokenInfo(TokenType token, Position start, Position end) {
     // === Delimiters Tokens === //
 
     public static TokenInfo LEFT_CURLY_BRACKET(Position position) {
-        return new TokenInfo(
-            DelimitersToken.LEFT_CURLY_BRACKET,
+        return new TokenInfo(new LeftCurlyBracketDelimiter(),
             position,
             Position.of(position.column + 1, position.line)
         );
     }
 
     public static TokenInfo RIGHT_CURLY_BRACKET(Position position) {
-        return new TokenInfo(
-            DelimitersToken.RIGHT_CURLY_BRACKET,
+        return new TokenInfo(new RightCurlyBracket(),
             position,
             Position.of(position.column + 1, position.line)
         );
     }
 
     public static TokenInfo LEFT_PARENTHESES(Position position) {
-        return new TokenInfo(
-            DelimitersToken.LEFT_PARENTHESES,
+        return new TokenInfo(new LeftParentheses(),
             position,
             Position.of(position.column + 1, position.line)
         );
     }
 
     public static TokenInfo RIGHT_PARENTHESES(Position position) {
-        return new TokenInfo(
-            DelimitersToken.RIGHT_PARENTHESES,
+        return new TokenInfo(new RightParentheses(),
             position,
             Position.of(position.column + 1, position.line)
         );
@@ -90,48 +101,42 @@ public record TokenInfo(TokenType token, Position start, Position end) {
     // === Keywords Tokens === //
 
     public static TokenInfo ELSE(Position position) {
-        return new TokenInfo(
-            KeywordsToken.ELSE,
+        return new TokenInfo(new ElseKeyword(),
             position,
             Position.of(position.column + 4, position.line)
         );
     }
 
     public static TokenInfo FALSE(Position position) {
-        return new TokenInfo(
-            KeywordsToken.FALSE,
+        return new TokenInfo(new FalseKeyword(),
             position,
             Position.of(position.column + 5, position.line)
         );
     }
 
     public static TokenInfo FN(Position position) {
-        return new TokenInfo(
-            KeywordsToken.FN,
+        return new TokenInfo(new FnKeyword(),
             position,
             Position.of(position.column + 2, position.line)
         );
     }
 
     public static TokenInfo IF(Position position) {
-        return new TokenInfo(
-            KeywordsToken.IF,
+        return new TokenInfo(new IfKeyword(),
             position,
             Position.of(position.column + 2, position.line)
         );
     }
 
     public static TokenInfo LET(Position position) {
-        return new TokenInfo(
-            KeywordsToken.LET,
+        return new TokenInfo(new LetKeyword(),
             position,
             Position.of(position.column + 3, position.line)
         );
     }
 
     public static TokenInfo TRUE(Position position) {
-        return new TokenInfo(
-            KeywordsToken.TRUE,
+        return new TokenInfo(new TrueKeyword(),
             position,
             Position.of(position.column + 4, position.line)
         );
@@ -140,80 +145,70 @@ public record TokenInfo(TokenType token, Position start, Position end) {
     // === Punctuations Tokens === //
 
     public static TokenInfo PLUS(Position position) {
-        return new TokenInfo(
-            PunctuationsToken.PLUS,
+        return new TokenInfo(new PlusPunctuation(),
             position,
             Position.of(position.column + 1, position.line)
         );
     }
 
     public static TokenInfo MINUS(Position position) {
-        return new TokenInfo(
-            PunctuationsToken.MINUS,
+        return new TokenInfo(new MinusPunctuation(),
             position,
             Position.of(position.column + 1, position.line)
         );
     }
 
     public static TokenInfo STAR(Position position) {
-        return new TokenInfo(
-            PunctuationsToken.STAR,
+        return new TokenInfo(new StarPunctuation(),
             position,
             Position.of(position.column + 1, position.line)
         );
     }
 
     public static TokenInfo SLASH(Position position) {
-        return new TokenInfo(
-            PunctuationsToken.SLASH,
+        return new TokenInfo(new SlashPunctuation(),
             position,
             Position.of(position.column + 1, position.line)
         );
     }
 
     public static TokenInfo PERCENT(Position position) {
-        return new TokenInfo(
-            PunctuationsToken.PERCENT,
+        return new TokenInfo(new PercentPunctuation(),
             position,
             Position.of(position.column + 1, position.line)
         );
     }
 
     public static TokenInfo NOT(Position position) {
-        return new TokenInfo(
-            PunctuationsToken.NOT,
+        return new TokenInfo(new NotPunctuation(),
             position,
             Position.of(position.column + 1, position.line)
         );
     }
 
     public static TokenInfo EQ(Position position) {
-        return new TokenInfo(
-            PunctuationsToken.EQ,
+        return new TokenInfo(new EqPunctuation(),
             position,
             Position.of(position.column + 1, position.line)
         );
     }
 
     public static TokenInfo EQEQ(Position position) {
-        return new TokenInfo(
-            PunctuationsToken.EQEQ,
+        return new TokenInfo(new EqEqPunctuation(),
             position,
             Position.of(position.column + 2, position.line)
         );
     }
 
     public static TokenInfo NE(Position position) {
-        return new TokenInfo(
-            PunctuationsToken.NE,
+        return new TokenInfo(new NePunctuation(),
             position,
             Position.of(position.column + 2, position.line)
         );
     }
 
     public static TokenInfo SEMI(Position position) {
-        return new TokenInfo(
-            PunctuationsToken.SEMI,
+        return new TokenInfo(new SemiPunctuation(),
             position,
             Position.of(position.column + 1, position.line)
         );
