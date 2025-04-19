@@ -3,8 +3,8 @@ fn add(a int, b int) {
     print(result);
 }
 
-fn is_even(n int) {
-    if (n % 2 == 0) {
+fn is_more(n int) {
+    if (n > 5) {
         print(true);
     } else {
         print(false);
@@ -29,10 +29,8 @@ fn main() {
     let a int = 3;
     let b int = 4;
     add(a, b);
-    is_even(b);
 
-    loop {
-        print(999);
-        break;
-    }
+    is_more(b);
+    is_more(b + 1);
+    is_more(b + 2);
 }

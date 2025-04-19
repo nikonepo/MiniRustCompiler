@@ -2,9 +2,7 @@ grammar MiniRust;
 
 import Expressions;
 
-program
-    : functionDeclaration* 'fn' 'main()' '{' statement* '}' EOF
-    ;
+program : functionDeclaration+ EOF ;
 
 statement
     : letStatement
