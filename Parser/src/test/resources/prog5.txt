@@ -1,0 +1,38 @@
+fn add(a int, b int) {
+    let result int = a + b;
+    print(result);
+}
+
+fn is_even(n int) {
+    if (n % 2 == 0) {
+        print(true);
+    } else {
+        print(false);
+    }
+}
+
+fn main() {
+    let mut x int = 0;
+    let y int = 10;
+
+    while (x < y) {
+        print(x);
+        x = x + 1;
+    }
+
+    if (x == 10 && y == 10) {
+        print(100);
+    } else {
+        print(0);
+    }
+
+    let a int = 3;
+    let b int = 4;
+    add(a, b);
+    is_even(b);
+
+    loop {
+        print(999);
+        break;
+    }
+}
