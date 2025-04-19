@@ -1,6 +1,14 @@
 fn add(a int, b int) {
     let result int = a + b;
     print(result);
+
+    let name int = a + 10;
+
+    while (result > 10) {
+        result = result - 10;
+
+        let a int;
+    }
 }
 
 fn is_more(n int) {

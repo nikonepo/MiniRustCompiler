@@ -15,7 +15,7 @@ import java.nio.file.Path;
 
 public class ParserTests
 {
-    private static final String DOT_FILE = "D:\\GitReps\\MiniRustCompiler\\Parser\\src\\test\\resources\\";
+    private static final String OUTPUT_FOLDER = "";
 
     @Test
     public void testOk1() throws IOException
@@ -62,7 +62,7 @@ public class ParserTests
             {
                 GraphvizVisitor gv = new GraphvizVisitor();
                 String dot = gv.generateDot(tree);
-                Files.writeString(Path.of(DOT_FILE + "tree.dot"), dot);
+                Files.writeString(Path.of(OUTPUT_FOLDER + "tree.dot"), dot);
             }
         }
 

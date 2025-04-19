@@ -1,4 +1,5 @@
 import mipt.compiler.minirust.ir.IRTranslateVisitor;
+import mipt.compiler.minirust.ir.ScopeVisitor;
 import mipt.compiler.minirust.parser.internal.MiniRustLexer;
 import mipt.compiler.minirust.parser.internal.MiniRustParser;
 import org.antlr.v4.runtime.CharStream;
@@ -12,7 +13,7 @@ import java.io.PrintWriter;
 
 public class IRGenerationTests
 {
-    private static final String IR_OUTPUT = "D:\\GitReps\\MiniRustCompiler\\IR\\src\\test\\resources\\";
+    private static final String OUTPUT_FOLDER = "";
 
     @Test
     public void testOk1() throws IOException
@@ -24,6 +25,20 @@ public class IRGenerationTests
     public void testOk2() throws IOException
     {
         doParseAndTranslateToIr("prog2.txt");
+    }
+
+    // Shadow переменные и неиспользуемые
+    @Test
+    public void testOk3() throws IOException
+    {
+        doParseAndTranslateToIr("prog4.txt");
+    }
+
+    // Дважды объявленные переменные
+    @Test
+    public void testFail1() throws IOException
+    {
+        doParseAndTranslateToIr("prog3.txt");
     }
 
     private ParseTree doParse(String fileName, boolean printTree) throws IOException
@@ -52,9 +67,17 @@ public class IRGenerationTests
     {
         var tree = doParse(fileName, true);
 
-        try (PrintWriter writer = new PrintWriter(IR_OUTPUT + "IR" + fileName))
+        try (PrintWriter writer = new PrintWriter(OUTPUT_FOLDER + "IR" + fileName))
         {
             writer.println(new IRTranslateVisitor().visit(tree));
+        }
+
+        try (PrintWriter writer = new PrintWriter(OUTPUT_FOLDER + "scopes.dot"))
+        {
+            var visitor = new ScopeVisitor();
+            visitor.visit(tree);
+
+            writer.println(visitor.generateDot());
         }
     }
 }
