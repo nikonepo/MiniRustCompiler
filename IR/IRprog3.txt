@@ -1,0 +1,22 @@
+fn main() {
+  %t0 = create int
+  store 100, %t0
+  %t1 = create int
+  store 200, %t1
+  %t2 = create int
+  %t3 = load %t0
+  %t4 = load %t1
+  %t5 = add %t3, %t4
+  %t6 = mul %t5, 2
+  %t7 = load %t0
+  %t8 = mul 3, %t7
+  %t9 = add %t6, %t8
+  store %t9, %t2
+  store 50, %p0
+  %t10 = call print_number
+  store 80, %p0
+  %t11 = call print_number
+  %t12 = create int
+  store 100, %t12
+  %t13 = create int
+}

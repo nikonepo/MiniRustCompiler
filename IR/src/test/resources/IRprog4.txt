@@ -1,0 +1,23 @@
+fn main() {
+  %t0 = create int
+  store 100, %t0
+  %t1 = create int
+  store 200, %t1
+  label cond0
+  %t2 = load %t1
+  %t3 = gt %t2, 100
+  cond_jump %t3, body1
+  jump end2
+  label body1
+  %t4 = create int
+  store 130, %t4
+  %t5 = create int
+  store 140, %t5
+  %t6 = create int
+  store 140, %t6
+  call print, 1000
+  %t7 = load %t6
+  call print, %t7
+  jump cond0
+  label end2
+}

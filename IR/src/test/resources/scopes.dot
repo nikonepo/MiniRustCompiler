@@ -1,0 +1,22 @@
+digraph ScopeTree {
+  node [shape=box, fontname="Courier"];
+  global [label="global\n----------------\n"]
+  global -> fn_add
+  fn_add [label="fn add\n----------------\na : int (immut) [ok]\nb : int (immut) [ok]\n"]
+  fn_add -> block0
+  block0 [label="block0\n----------------\nresult : int (immut) [ok]\nname : int (immut) [unused]\n"]
+  block0 -> while1
+  while1 -> fn_add [label="shadows a"]
+  while1 [label="while1\n----------------\na : int (immut) [shadow]\n"]
+  global -> fn_is_more
+  fn_is_more [label="fn is_more\n----------------\nn : int (immut) [ok]\n"]
+  fn_is_more -> block2
+  block2 [label="block2\n----------------\n"]
+  global -> fn_main
+  fn_main [label="fn main\n----------------\n"]
+  fn_main -> block3
+  block3 [label="block3\n----------------\nx : int (mut) [ok]\ny : int (immut) [ok]\na : int (immut) [ok]\nb : int (immut) [ok]\n"]
+  block3 -> while4
+  while4 [label="while4\n----------------\n"]
+}
+
