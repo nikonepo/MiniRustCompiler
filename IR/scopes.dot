@@ -1,9 +1,0 @@
-digraph ScopeTree {
-  node [shape=box, fontname="Courier"];
-  global [label="global\n----------------\n"]
-  global -> fn_main
-  fn_main [label="fn main\n----------------\n"]
-  fn_main -> block0
-  block0 [label="block0\n----------------\nvar1 : int (mut) [duplicate]\nvar2 : int (mut) [duplicate]\nvar3 : int (mut) [unused]\n"]
-}
-
