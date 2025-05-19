@@ -339,7 +339,12 @@ public class TypeCheckVisitor extends MiniRustBaseVisitor<Type> {
             var name = ctx.identifierExpression().getText();
             var type = getVariableType(name);
             if (type.isError()) {
-                addError("Undefined variable: " + name);
+                // Check if the identifier is a function name
+                if (functionTypes.containsKey(name)) {
+                    addError("Function '" + name + "' used as a variable");
+                } else {
+                    addError("Undefined variable: " + name);
+                }
             }
 
             return type;
@@ -379,7 +384,12 @@ public class TypeCheckVisitor extends MiniRustBaseVisitor<Type> {
         var type = getVariableType(name);
 
         if (type.isError()) {
-            addError("Undefined variable: " + name);
+            // Check if the identifier is a function name
+            if (functionTypes.containsKey(name)) {
+                addError("Function '" + name + "' used as a variable");
+            } else {
+                addError("Undefined variable: " + name);
+            }
         }
 
         return type;
