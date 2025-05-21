@@ -1,3 +1,3 @@
 grammar Types;
 
-TYPE: 'int' ;
+TYPE : 'int' | 'bool' | 'float' ;

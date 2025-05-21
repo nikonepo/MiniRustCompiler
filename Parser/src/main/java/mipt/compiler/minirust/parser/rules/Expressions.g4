@@ -2,30 +2,51 @@ grammar Expressions;
 
 import Types, Literals;
 
-expression : arithmeticExpression | operatorExpression ;
+expression
+    : logicalExpression
+    ;
 
-operatorExpression :
-    arithmeticExpression
-  | comparisonExpression;
+logicalExpression
+    : comparisonExpression (('&&' | '||') comparisonExpression)*
+    ;
+
+comparisonExpression
+    : arithmeticExpression (COMPARISON_OP arithmeticExpression)?
+    ;
 
 arithmeticExpression
-    : term (('+' | '-') term)* ;
+    : term (('+' | '-') term)*
+    ;
+
 term
-    : factor (('*' | '/') factor)* ;
+    : factor (('*' | '/') factor)*
+    ;
+
 factor
-    : literalExpression | identifierExpression
-    | '(' arithmeticExpression ')';
+    : literalExpression
+    | identifierExpression
+    | functionCall
+    | '(' expression ')'
+    ;
 
-comparisonExpression :
-     arithmeticExpression '==' arithmeticExpression
-   | arithmeticExpression '!=' arithmeticExpression
-   | arithmeticExpression '>' arithmeticExpression
-   | arithmeticExpression '<' arithmeticExpression
-   | arithmeticExpression '>=' arithmeticExpression
-   | arithmeticExpression '<=' arithmeticExpression ;
+literalExpression
+    : INTEGER_LITERAL
+    | FLOAT_LITERAL
+    | BOOLEAN_LITERAL
+    ;
 
-literalExpression :
-   INTEGER_LITERAL;
+identifierExpression
+    : IDENTIFIER
+    ;
 
-identifierExpression :
-   IDENTIFIER;
+functionCall
+    : IDENTIFIER '(' argumentList? ')'
+    ;
+
+argumentList
+    : expression (',' expression)*
+    ;
+
+COMPARISON_OP
+    : '==' | '!=' | '>' | '<' | '>=' | '<='
+    ;

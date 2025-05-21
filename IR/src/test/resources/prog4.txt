@@ -1,0 +1,14 @@
+fn main() {
+    let mut var1 int = 100;
+    let mut var2 int = 200;
+
+    while (var2 > 100) {
+        let mut var1 int = 130;
+        let mut var2 int = 140;
+        let mut var3 int = 140;
+
+        print(1000);
+
+        print(var3);
+    }
+}

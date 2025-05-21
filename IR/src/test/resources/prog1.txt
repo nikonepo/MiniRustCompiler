@@ -1,5 +1,6 @@
-fn print_number(value int) {
-    print(value + 100);
+fn print_number(value1 int, value2 int) {
+    print(value1 + 100);
+    print(value2 + 101);
 }
 
 fn main() {

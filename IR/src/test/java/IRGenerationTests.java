@@ -1,43 +1,44 @@
-import mipt.compiler.minirust.parser.GraphvizVisitor;
-import mipt.compiler.minirust.parser.SimpleInterpreter;
+import mipt.compiler.minirust.ir.IRTranslateVisitor;
+import mipt.compiler.minirust.ir.ScopeVisitor;
 import mipt.compiler.minirust.parser.internal.MiniRustLexer;
 import mipt.compiler.minirust.parser.internal.MiniRustParser;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.io.PrintWriter;
 
-public class ParserTests
+public class IRGenerationTests
 {
     private static final String OUTPUT_FOLDER = "";
 
     @Test
     public void testOk1() throws IOException
     {
-        doParseAndExec("prog1.txt");
+        doParseAndTranslateToIr("prog1.txt");
     }
 
     @Test
     public void testOk2() throws IOException
     {
-        doParseAndExec("prog5.txt");
+        doParseAndTranslateToIr("prog2.txt");
     }
 
+    // Shadow переменные и неиспользуемые
     @Test
-    public void testFailed() throws IOException
+    public void testOk3() throws IOException
     {
-        // Есть ошибки при выводе по грамматике
-        doParse("prog2.txt", true);
+        doParseAndTranslateToIr("prog4.txt");
+    }
 
-        // Ошибки времени исполнения
-        Assertions.assertThrows(Exception.class, () -> doParseAndExec("prog3.txt"));
-        Assertions.assertThrows(Exception.class, () -> doParseAndExec("prog4.txt"));
+    // Дважды объявленные переменные
+    @Test
+    public void testFail1() throws IOException
+    {
+        doParseAndTranslateToIr("prog3.txt");
     }
 
     private ParseTree doParse(String fileName, boolean printTree) throws IOException
@@ -57,22 +58,26 @@ public class ParserTests
 
             parser = new MiniRustParser(tokens);
             tree = parser.program();
-
-            if (printTree)
-            {
-                GraphvizVisitor gv = new GraphvizVisitor();
-                String dot = gv.generateDot(tree);
-                Files.writeString(Path.of(OUTPUT_FOLDER + "tree.dot"), dot);
-            }
         }
 
         return tree;
     }
 
-    private void doParseAndExec(String fileName) throws IOException
+    private void doParseAndTranslateToIr(String fileName) throws IOException
     {
         var tree = doParse(fileName, true);
 
-        new SimpleInterpreter().visit(tree);
+        try (PrintWriter writer = new PrintWriter(OUTPUT_FOLDER + "IR" + fileName))
+        {
+            writer.println(new IRTranslateVisitor().visit(tree));
+        }
+
+        try (PrintWriter writer = new PrintWriter(OUTPUT_FOLDER + "scopes.dot"))
+        {
+            var visitor = new ScopeVisitor();
+            visitor.visit(tree);
+
+            writer.println(visitor.generateDot());
+        }
     }
 }

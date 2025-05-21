@@ -1,0 +1,44 @@
+fn add(a int, b int) {
+    let result int = a + b;
+    print(result);
+
+    let name int = a + 10;
+
+    while (result > 10) {
+        result = result - 10;
+
+        let a int;
+    }
+}
+
+fn is_more(n int) {
+    if (n > 5) {
+        print(true);
+    } else {
+        print(false);
+    }
+}
+
+fn main() {
+    let mut x int = 0;
+    let y int = 10;
+
+    while (x < y) {
+        print(x);
+        x = x + 1;
+    }
+
+    if (x == 10 && y == 10) {
+        print(100);
+    } else {
+        print(0);
+    }
+
+    let a int = 3;
+    let b int = 4;
+    add(a, b);
+
+    is_more(b);
+    is_more(b + 1);
+    is_more(b + 2);
+}

@@ -1,4 +1,4 @@
-// Generated from D:/GitReps/compiler_course/Parser/src/main/java/mipt/compiler/minirust/parser/rules/MiniRust.g4 by ANTLR 4.13.2
+// Generated from D:/GitReps/MiniRustCompiler/Parser/src/main/java/mipt/compiler/minirust/parser/rules/MiniRust.g4 by ANTLR 4.13.2
 package mipt.compiler.minirust.parser.internal;
 import org.antlr.v4.runtime.tree.ParseTreeVisitor;
 
@@ -47,11 +47,53 @@ public interface MiniRustVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitIfStatement(MiniRustParser.IfStatementContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link MiniRustParser#whileStatement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitWhileStatement(MiniRustParser.WhileStatementContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link MiniRustParser#loopStatement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitLoopStatement(MiniRustParser.LoopStatementContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link MiniRustParser#printStatement}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitPrintStatement(MiniRustParser.PrintStatementContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link MiniRustParser#expressionStatement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitExpressionStatement(MiniRustParser.ExpressionStatementContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link MiniRustParser#functionDeclaration}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFunctionDeclaration(MiniRustParser.FunctionDeclarationContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link MiniRustParser#parameterList}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitParameterList(MiniRustParser.ParameterListContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link MiniRustParser#parameter}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitParameter(MiniRustParser.ParameterContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link MiniRustParser#block}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitBlock(MiniRustParser.BlockContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link MiniRustParser#expression}.
 	 * @param ctx the parse tree
@@ -59,11 +101,17 @@ public interface MiniRustVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitExpression(MiniRustParser.ExpressionContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link MiniRustParser#operatorExpression}.
+	 * Visit a parse tree produced by {@link MiniRustParser#logicalExpression}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitOperatorExpression(MiniRustParser.OperatorExpressionContext ctx);
+	T visitLogicalExpression(MiniRustParser.LogicalExpressionContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link MiniRustParser#comparisonExpression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitComparisonExpression(MiniRustParser.ComparisonExpressionContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link MiniRustParser#arithmeticExpression}.
 	 * @param ctx the parse tree
@@ -83,12 +131,6 @@ public interface MiniRustVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitFactor(MiniRustParser.FactorContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link MiniRustParser#comparisonExpression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitComparisonExpression(MiniRustParser.ComparisonExpressionContext ctx);
-	/**
 	 * Visit a parse tree produced by {@link MiniRustParser#literalExpression}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -100,4 +142,16 @@ public interface MiniRustVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitIdentifierExpression(MiniRustParser.IdentifierExpressionContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link MiniRustParser#functionCall}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFunctionCall(MiniRustParser.FunctionCallContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link MiniRustParser#argumentList}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitArgumentList(MiniRustParser.ArgumentListContext ctx);
 }
