@@ -15,6 +15,9 @@ dependencies {
     implementation(project(":Parser"))
     implementation(project(":Lexer"))
     implementation("org.antlr:antlr4:4.13.2")
+
+    // https://mvnrepository.com/artifact/org.bytedeco/llvm-platform
+    implementation("org.bytedeco:llvm-platform:19.1.3-1.5.11")
 }
 
 application {
