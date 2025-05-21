@@ -25,9 +25,16 @@ java -jar .\Compiler\build\libs\MiniRustCompiler.jar <arguments>
 
 Пример запуска:
 
+windows
 ```
-java -jar .\Compiler\build\libs\MiniRustCompiler.jar -compile program.txt program.exe
-./program.exe
+java -jar .\Compiler\build\libs\MiniRustCompiler.jar -compile example\program.txt program.exe
+.\program.exe
+```
+
+linux
+```
+java -jar ./Compiler/build/libs/MiniRustCompiler.jar -compile example/program.txt program
+./program
 ```
 
 ### Компиляция в исполняемый файл
