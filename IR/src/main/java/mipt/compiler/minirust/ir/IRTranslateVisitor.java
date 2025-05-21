@@ -114,44 +114,57 @@ public class IRTranslateVisitor extends MiniRustBaseVisitor<String>
     }
 
     @Override
-    public String visitIfStatement(MiniRustParser.IfStatementContext ctx)
-    {
-        List<String> labels = new ArrayList<>();
+    public String visitIfStatement(MiniRustParser.IfStatementContext ctx) {
         int branchCount = ctx.expression().size();
+        boolean hasElse = ctx.getText().contains("else");
+
+        List<String> thenLabels = new ArrayList<>(branchCount);
+        for (int i = 0; i < branchCount; i++) {
+            thenLabels.add(newLabel("then"));
+        }
+
+        String elseLabel = hasElse ? newLabel("else") : null;
         String endLabel = newLabel("endif");
 
-        for (int i = 0; i < branchCount; i++)
-        {
+        for (int i = 0; i < branchCount; i++) {
             String cond = visitExpr(ctx.expression(i));
-            String thenLabel = newLabel("then");
-            labels.add(thenLabel);
-            currentFunction.add(new IRCondJump(cond, thenLabel));
+
+            String falseTarget;
+            if (i + 1 < branchCount) {
+                falseTarget = thenLabels.get(i + 1);
+            } else if (hasElse) {
+                falseTarget = elseLabel;
+            } else {
+                falseTarget = endLabel;
+            }
+
+            currentFunction.add(new IRCondJump(cond,
+                thenLabels.get(i),
+                falseTarget));
         }
 
-        if (ctx.getText().contains("else"))
-        {
-            String elseLabel = newLabel("else");
-            labels.add(elseLabel);
-            currentFunction.add(new IRJump(elseLabel));
-        }
-        else
-        {
-            currentFunction.add(new IRJump(endLabel));
-        }
-
-        int stmtIndex = 0;
-        for (int i = 0; i < labels.size(); i++)
-        {
-            currentFunction.add(new IRLabel(labels.get(i)));
-            int count = getStatementCountInBranch(ctx, i);
-            for (int j = 0; j < count; j++)
-            {
-                visit(ctx.statementIf(stmtIndex++));
+        if (hasElse) {
+            currentFunction.add(new IRLabel(elseLabel));
+            for (int i = branchCount; i < ctx.statementIf().size(); i++) {
+                visit(ctx.statementIf(i));
             }
             currentFunction.add(new IRJump(endLabel));
         }
 
+        int stmtIdx = 0;
+        for (int i = 0; i < branchCount; i++) {
+            currentFunction.add(new IRLabel(thenLabels.get(i)));
+
+            int count = getStatementCountInBranch(ctx, i);
+            for (int j = 0; j < count; j++) {
+                visit(ctx.statementIf(stmtIdx++));
+            }
+
+            currentFunction.add(new IRJump(endLabel));
+        }
+
         currentFunction.add(new IRLabel(endLabel));
+
         return null;
     }
 
@@ -187,8 +200,8 @@ public class IRTranslateVisitor extends MiniRustBaseVisitor<String>
 
         currentFunction.add(new IRLabel(condLabel));
         String cond = visitExpr(ctx.expression());
-        currentFunction.add(new IRCondJump(cond, bodyLabel));
-        currentFunction.add(new IRJump(endLabel));
+
+        currentFunction.add(new IRCondJump(cond, bodyLabel, endLabel));
 
         currentFunction.add(new IRLabel(bodyLabel));
         ctx.statement().forEach(this::visit);
