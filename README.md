@@ -27,13 +27,13 @@ java -jar .\Compiler\build\libs\MiniRustCompiler.jar <arguments>
 
 windows
 ```
-java -jar .\Compiler\build\libs\MiniRustCompiler.jar -compile example\program.txt program.exe
+java -jar .\Compiler\build\libs\MiniRustCompiler.jar -compile example\program1.txt program.exe
 .\program.exe
 ```
 
 linux
 ```
-java -jar ./Compiler/build/libs/MiniRustCompiler.jar -compile example/program.txt program
+java -jar ./Compiler/build/libs/MiniRustCompiler.jar -compile example/program1.txt program
 ./program
 ```
 
