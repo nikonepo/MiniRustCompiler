@@ -28,7 +28,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up JDK 21
         uses: actions/setup-java@v4
@@ -40,7 +40,7 @@ jobs:
           chmod +x gradlew
           ./gradlew :Compiler:shadowJar
       - name: Upload compiler JAR artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: compiler-shadowjar
           path: Compiler/build/libs/*.jar
