@@ -1,5 +1,9 @@
 name: Project CI
 
+on:
+  pull_request:
+    branches: [ main, parser, IR ]
+
 jobs:
   test:
     runs-on: ubuntu-latest
