@@ -2,7 +2,7 @@ name: Project CI
 
 on:
   pull_request:
-    branches: [ main, parser ]
+    branches: [ main, parser, IR ]
 
 jobs:
   test:
@@ -38,4 +38,9 @@ jobs:
       - name: Build with Gradle
         run: |
           chmod +x gradlew
-          ./gradlew build
+          ./gradlew :Compiler:shadowJar
+      - name: Upload compiler JAR artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: compiler-shadowjar
+          path: Compiler/build/libs/*.jar

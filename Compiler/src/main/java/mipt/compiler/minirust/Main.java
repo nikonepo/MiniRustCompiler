@@ -52,6 +52,13 @@ public class Main
                 typeCheck(inputFile);
                 break;
             }
+            case "-compile":
+            {
+                File outputFile = new File(args[2]);
+                String optimizationLevel = args.length > 3 ? args[3] : "0";
+                compileToExecutable(inputFile, outputFile, optimizationLevel);
+                break;
+            }
             default:
             {
                 System.out.println("Unknown mode: " + mode);
@@ -120,6 +127,35 @@ public class Main
             for (String error : errors) {
                 System.out.println("  - " + error);
             }
+        }
+    }
+
+    private static void compileToExecutable(File inputFile, File outputFile, String optimizationLevel) throws IOException
+    {
+        // Generate IR
+        var tree = parseProgram(Files.readString(inputFile.toPath()));
+        var irVisitor = new IRTranslateVisitor();
+        irVisitor.visit(tree);
+
+        // Get the IR module
+        var irModule = irVisitor.getModule();
+
+        String irFileName = outputFile.getName().replaceFirst("[.][^.]+$", "") + ".ll";
+
+        File irFile = new File(outputFile.getParentFile(), irFileName);
+
+        // Translate IR to LLVM IR using the new visitor
+        String llvmIR = new IRToLLVMVisitor().translate(irModule);
+        Files.writeString(irFile.toPath(), llvmIR);
+
+        try {
+            LLVMCompiler.compile(irFile, outputFile, optimizationLevel);
+
+            System.out.println("Compilation successful. Executable saved to " + outputFile.getAbsolutePath());
+            System.out.println("LLVM IR saved to " + irFile.getAbsolutePath());
+        } catch (IOException e) {
+            System.err.println("Compilation failed. LLVM IR saved to " + irFile.getAbsolutePath());
+            throw e;
         }
     }
 }

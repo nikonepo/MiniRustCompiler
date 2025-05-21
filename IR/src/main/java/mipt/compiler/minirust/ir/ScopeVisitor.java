@@ -24,6 +24,22 @@ public class ScopeVisitor extends MiniRustBaseVisitor<Void>
             if (parent != null) parent.children.add(this);
         }
 
+        public String getName() {
+            return name;
+        }
+
+        public List<Scope> getChildren() {
+            return children;
+        }
+
+        public Scope getParent() {
+            return parent;
+        }
+
+        public Map<String, VariableSymbol> getVariables() {
+            return variables;
+        }
+
         boolean declareVariable(String name, String type, boolean isMut)
         {
             if (variables.containsKey(name))
@@ -73,6 +89,14 @@ public class ScopeVisitor extends MiniRustBaseVisitor<Void>
     private Scope currentScope = globalScope;
     private int scopeCounter = 0;
     private final Map<String, FunctionSymbol> functions = new LinkedHashMap<>();
+
+    public Scope getGlobalScope() {
+        return globalScope;
+    }
+
+    public Map<String, FunctionSymbol> getFunctions() {
+        return functions;
+    }
 
     public String generateDot()
     {
