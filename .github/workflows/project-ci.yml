@@ -39,3 +39,8 @@ jobs:
         run: |
           chmod +x gradlew
           ./gradlew :Compiler:shadowJar
+      - name: Upload compiler JAR artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: compiler-shadowjar
+          path: Compiler/build/libs/*.jar
