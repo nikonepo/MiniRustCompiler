@@ -2,6 +2,7 @@ package mipt.compiler.minirust;
 
 import mipt.compiler.minirust.ir.IRTranslateVisitor;
 import mipt.compiler.minirust.ir.ScopeVisitor;
+import mipt.compiler.minirust.ir.TypeCheckVisitor;
 import mipt.compiler.minirust.parser.GraphvizVisitor;
 import mipt.compiler.minirust.parser.SimpleInterpreter;
 import mipt.compiler.minirust.parser.internal.MiniRustLexer;
@@ -44,6 +45,11 @@ public class Main
             {
                 File outputFile = new File(args[2]);
                 drawScopes(inputFile, outputFile);
+                break;
+            }
+            case "-typecheck":
+            {
+                typeCheck(inputFile);
                 break;
             }
             default:
@@ -94,5 +100,26 @@ public class Main
         visitor.visit(tree);
 
         Files.writeString(outputFile.toPath(), visitor.generateDot());
+    }
+
+    private static void typeCheck(File inputFile) throws IOException
+    {
+        var tree = parseProgram(Files.readString(inputFile.toPath()));
+
+        var scopeVisitor = new ScopeVisitor();
+        scopeVisitor.visit(tree);
+
+        var typeCheckVisitor = new TypeCheckVisitor(scopeVisitor);
+        typeCheckVisitor.visit(tree);
+
+        var errors = typeCheckVisitor.getErrors();
+        if (errors.isEmpty()) {
+            System.out.println("No type errors found.");
+        } else {
+            System.out.println("Found " + errors.size() + " type error(s):");
+            for (String error : errors) {
+                System.out.println("  - " + error);
+            }
+        }
     }
 }

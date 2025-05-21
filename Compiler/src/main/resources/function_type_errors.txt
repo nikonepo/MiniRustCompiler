@@ -1,0 +1,24 @@
+fn add(a int, b int) {
+    let result int = a + b;
+    print(result);
+}
+
+fn multiply(a int, b int) {
+    let result int = a * b;
+    print(result);
+}
+
+fn main() {
+    let func int = add;
+
+    let x int = 10;
+    let y int = 20;
+    let z int = multiply + x;
+
+    // Correct usage: Calling functions
+    let a int = add(x, y);
+    let b int = multiply(x, y);
+
+    // Correct usage: Passing functions as arguments
+    print(add(x, y));
+}
